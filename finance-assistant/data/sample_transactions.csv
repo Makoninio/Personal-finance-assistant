@@ -1,0 +1,21 @@
+id,date,amount,description,type,category,subcategory
+1,2024-01-15,-12.99,SPOTIFY PREMIUM,debit,Entertainment,Streaming
+2,2024-01-16,-45.67,FOOD LION #1234,debit,Groceries,
+3,2024-01-17,-89.50,SHELL GAS STATION,debit,Transportation,Gas
+4,2024-01-18,2500.00,SALARY DEPOSIT,credit,Income,
+5,2024-01-19,-1200.00,RENT PAYMENT,debit,Housing,
+6,2024-01-20,-75.00,T-MOBILE BILL,debit,Subscriptions,
+7,2024-01-21,-25.50,NETFLIX SUBSCRIPTION,debit,Entertainment,Streaming
+8,2024-01-22,-15.99,AMAZON PRIME,debit,Subscriptions,
+9,2024-01-23,-8.50,STARBUCKS COFFEE,debit,Dining,Coffee
+10,2024-01-24,-200.00,UTILITY BILL,debit,Utilities,
+11,2024-01-25,-45.00,CVS PHARMACY,debit,Healthcare,
+12,2024-01-26,-120.00,AMAZON PURCHASE,debit,Shopping,
+13,2024-01-27,-35.00,UBER RIDE,debit,Transportation,Rideshare
+14,2024-01-28,-18.99,APPLE MUSIC,debit,Entertainment,Music
+15,2024-01-29,-65.00,GROCERY STORE,debit,Groceries,
+16,2024-01-30,-12.00,PARKING FEE,debit,Transportation,Parking
+17,2024-02-01,-12.99,SPOTIFY PREMIUM,debit,Entertainment,Streaming
+18,2024-02-02,-50.00,RESTAURANT DINNER,debit,Dining,Restaurants
+19,2024-02-03,-25.50,NETFLIX SUBSCRIPTION,debit,Entertainment,Streaming
+20,2024-02-04,-15.99,AMAZON PRIME,debit,Subscriptions,
