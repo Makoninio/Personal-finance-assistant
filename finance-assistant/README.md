@@ -1,17 +1,16 @@
-# 💰 Personal Finance AI Assistant
+# Personal Finance AI Assistant
 
-A hackathon-ready MVP for personal finance management with AI-powered categorization, insights, and multilingual support.
+A hackathon demo for personal finance management with AI-powered categorization, and insights.
 
-## 🚀 Features
+## Features
 
-- **📄 Data Ingestion**: Parse bank statement PDFs and CSV files
-- **🤖 AI Categorization**: Rule-based + OpenAI fallback for transaction categorization
+- **Data Ingestion**: Parse bank statement PDFs and CSV files
+- **AI Categorization**: Rule-based + OpenAI fallback for transaction categorization
 - **📊 Financial Insights**: Net worth tracking, spending analysis, and health scores
 - **🔍 Transaction Explanations**: AI-powered explanations using OpenAI and Perplexity
-- **🌍 Multilingual Reports**: DeepL integration for Spanish, French, German, and more
 - **📈 Interactive Dashboard**: Streamlit-based UI with charts and visualizations
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Backend**: Python, FastAPI, Pandas, SQLite
 - **Frontend**: Streamlit
@@ -19,7 +18,7 @@ A hackathon-ready MVP for personal finance management with AI-powered categoriza
 - **Database**: SQLite (local storage)
 - **Charts**: Plotly
 
-## 📦 Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -38,7 +37,7 @@ A hackathon-ready MVP for personal finance management with AI-powered categoriza
    # Edit .env with your API keys
    ```
 
-## 🚀 Quick Start
+## Quick Start
 
 1. **Run the application**
    ```bash
@@ -55,7 +54,7 @@ A hackathon-ready MVP for personal finance management with AI-powered categoriza
    - Generate multilingual reports
    - Analyze spending patterns
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 finance-assistant/
@@ -77,7 +76,7 @@ finance-assistant/
 └── README.md
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### API Keys (Optional)
 
@@ -89,7 +88,7 @@ finance-assistant/
 
 The app uses SQLite for local storage. Database file is created automatically at `data/transactions.db`.
 
-## 📊 Usage Examples
+## Usage Examples
 
 ### 1. Upload Bank Statement
 ```python
@@ -142,7 +141,7 @@ Or run specific tests:
 python tests/test_categorize.py
 ```
 
-## 🎯 Hackathon Demo Script
+## Hackathon Demo Script
 
 1. **Start the app**: `streamlit run frontend/app.py`
 2. **Load sample data**: Click "Load Sample Data"
@@ -151,7 +150,7 @@ python tests/test_categorize.py
 5. **Translate report**: Generate Spanish financial summary
 6. **Show insights**: Display health score and recommendations
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 - **Budget Planning**: Set and track budget goals
 - **Investment Tracking**: Monitor investment accounts
@@ -160,11 +159,11 @@ python tests/test_categorize.py
 - **Mobile App**: React Native mobile interface
 - **Advanced Analytics**: Machine learning insights
 
-## 📝 License
+## License
 
 MIT License - Built for hackathon demo purposes.
 
-## 🤝 Contributing
+## Contributing
 
 This is a hackathon project. For production use, consider:
 - Adding proper error handling
@@ -175,4 +174,4 @@ This is a hackathon project. For production use, consider:
 
 ---
 
-**Built in under 5 hours for hackathon demo! 🚀**
+**Built in under 5 hours for hackathon demo**
