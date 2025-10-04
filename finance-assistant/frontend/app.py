@@ -12,12 +12,12 @@ import os
 # Add backend to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
 
-from ingestion import StatementIngestion, create_sample_transactions
-from db import TransactionDB
+from ingestion import StatementIngestion
 from categorize import TransactionCategorizer
 from insights import FinancialInsights
 from explain import TransactionExplainer
 from translate import FinancialTranslator
+from db import TransactionDB
 
 # Page configuration
 st.set_page_config(
@@ -54,9 +54,6 @@ def main():
         st.markdown("---")
         st.header("💡 Quick Actions")
         
-        if st.button("🔄 Load Sample Data"):
-            load_sample_data()
-        
         if st.button("🗑️ Clear All Data"):
             clear_all_data()
     
@@ -71,23 +68,6 @@ def main():
         show_translation_page()
     elif page == "⚙️ Settings":
         show_settings_page()
-
-def load_sample_data():
-    """Load sample transaction data"""
-    with st.spinner("Loading sample data..."):
-        sample_df = create_sample_transactions()
-        
-        # Categorize the sample data
-        categorized_df = st.session_state.categorizer.categorize_batch(sample_df)
-        
-        # Store in database
-        st.session_state.db.insert_transactions(categorized_df)
-        
-        # Update session state
-        st.session_state.transactions_df = categorized_df
-        
-        st.success("Sample data loaded successfully!")
-        st.rerun()
 
 def clear_all_data():
     """Clear all transaction data"""
@@ -241,9 +221,16 @@ def show_upload_page():
             os.remove("temp_upload.pdf")
         
         elif uploaded_file.type == "text/csv":
+            # Save uploaded CSV temporarily
+            with open("temp_upload.csv", "wb") as f:
+                f.write(uploaded_file.getbuffer())
+            
             # Parse CSV
             with st.spinner("Parsing CSV..."):
-                df = ingestion.parse_csv(uploaded_file)
+                df = ingestion.parse_csv("temp_upload.csv")
+            
+            # Clean up temp file
+            os.remove("temp_upload.csv")
         
         if not df.empty:
             st.success(f"Successfully parsed {len(df)} transactions!")
@@ -251,6 +238,11 @@ def show_upload_page():
             # Show preview
             st.subheader("📋 Data Preview")
             st.dataframe(df.head(10))
+            
+            # Show column info
+            st.subheader("📊 Column Information")
+            st.write(f"Columns found: {list(df.columns)}")
+            st.write(f"Data types: {df.dtypes.to_dict()}")
             
             # Categorize transactions
             if st.button("🤖 Categorize Transactions"):
@@ -267,6 +259,17 @@ def show_upload_page():
                     st.rerun()
         else:
             st.error("Failed to parse file. Please check the format.")
+            st.info("""
+            **Supported formats:**
+            - **PDF**: Bank statement PDFs with transaction data
+            - **CSV**: Transaction files with columns like date, amount, description
+            
+            **CSV format should have columns:**
+            - date (or Date)
+            - amount (or Amount) 
+            - description (or Description)
+            - type (or Type) - optional
+            """)
 
 def show_explain_page():
     """Show transaction explanation page"""

@@ -6,6 +6,7 @@ import openai
 import os
 from typing import Dict, List, Tuple, Optional
 from dotenv import load_dotenv
+import pandas as pd
 
 load_dotenv()
 

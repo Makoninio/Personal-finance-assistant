@@ -4,7 +4,7 @@ AI-powered transaction explanation using OpenAI and Perplexity
 import openai
 import requests
 import os
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from dotenv import load_dotenv
 
 load_dotenv()

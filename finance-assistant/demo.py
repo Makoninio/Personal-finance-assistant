@@ -45,6 +45,8 @@ def main():
     
     # 4. Store in database
     print("\n4. 💾 Storing transactions in database...")
+    # Clear existing data first
+    db.clear_all_transactions()
     db.insert_transactions(categorized_df)
     print("   ✅ Transactions stored")
     
@@ -59,10 +61,16 @@ def main():
     print(f"   📉 Total Expenses: ${net_worth['total_expenses']:,.2f}")
     
     # Category breakdown
-    category_breakdown = insights.get_category_breakdown()
-    print("\n   📊 Top spending categories:")
-    for _, row in category_breakdown.head(5).iterrows():
-        print(f"      - {row['category']}: ${row['total_spent']:,.2f} ({row['percentage']:.1f}%)")
+    try:
+        category_breakdown = insights.get_category_breakdown()
+        if not category_breakdown.empty:
+            print("\n   📊 Top spending categories:")
+            for _, row in category_breakdown.head(5).iterrows():
+                print(f"      - {row['category']}: ${row['total_spent']:,.2f} ({row['percentage']:.1f}%)")
+        else:
+            print("\n   📊 No category breakdown available")
+    except Exception as e:
+        print(f"\n   📊 Category breakdown error: {e}")
     
     # Financial health score
     health_score = insights.get_financial_health_score()
