@@ -30,30 +30,29 @@ class FinancialInsights:
             'net_worth': round(net_worth, 2)
         }
     
-def get_category_breakdown(self) -> pd.DataFrame:
-    """Get spending breakdown by category"""
-    if self.df.empty or 'category' not in self.df.columns:
-        return pd.DataFrame()
-    
-    # Filter only debit transactions for spending analysis
-    debit_df = self.df[self.df['type'] == 'debit'].copy()
-    debit_df['amount'] = abs(debit_df['amount'])  # Make amounts positive for spending
-    
-    # Aggregate only on 'amount'
-    category_summary = debit_df.groupby('category').agg({
-        'amount': ['sum', 'count', 'mean'],
-    }).round(2)
-    
-    # Flatten MultiIndex columns properly (3 names instead of 4)
-    category_summary.columns = ['total_spent', 'transaction_count', 'avg_transaction']
-    
-    category_summary = category_summary.sort_values('total_spent', ascending=False)
-    category_summary['percentage'] = (
-        category_summary['total_spent'] / category_summary['total_spent'].sum() * 100
-    ).round(1)
-    
-    return category_summary.reset_index()
-    
+    def get_category_breakdown(self) -> pd.DataFrame:
+        """Get spending breakdown by category"""
+        if self.df.empty or 'category' not in self.df.columns:
+            return pd.DataFrame()
+        
+        # Filter only debit transactions for spending analysis
+        debit_df = self.df[self.df['type'] == 'debit'].copy()
+        debit_df['amount'] = abs(debit_df['amount'])  # Make amounts positive for spending
+        
+        # Aggregate only on 'amount'
+        category_summary = debit_df.groupby('category').agg({
+            'amount': ['sum', 'count', 'mean'],
+        }).round(2)
+        
+        # Flatten MultiIndex columns properly (3 names instead of 4)
+        category_summary.columns = ['total_spent', 'transaction_count', 'avg_transaction']
+        
+        category_summary = category_summary.sort_values('total_spent', ascending=False)
+        category_summary['percentage'] = (
+            category_summary['total_spent'] / category_summary['total_spent'].sum() * 100
+        ).round(1)
+        
+        return category_summary.reset_index()
     
     def get_monthly_trends(self) -> pd.DataFrame:
         """Get monthly spending and income trends"""

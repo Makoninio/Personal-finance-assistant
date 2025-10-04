@@ -130,23 +130,45 @@ class TransactionCategorizer:
     def _ai_categorization(self, description: str, amount: float) -> Tuple[str, Optional[str]]:
         """Use OpenAI to categorize transaction"""
         prompt = f"""
-        Categorize this bank transaction into one of these categories:
-        - Entertainment (streaming, gaming, movies, music)
-        - Groceries (food, household items)
-        - Transportation (gas, rideshare, parking)
-        - Income (salary, deposits, refunds)
-        - Housing (rent, mortgage, utilities)
-        - Subscriptions (monthly services)
-        - Dining (restaurants, coffee, fast food)
-        - Utilities (electric, water, internet, phone)
-        - Healthcare (medical, pharmacy)
-        - Shopping (retail, online purchases)
-        - Other (uncategorized)
+        You are a financial transaction categorization expert. Analyze this bank transaction and categorize it accurately.
 
-        Transaction: {description}
-        Amount: ${amount:.2f}
+        Transaction Details:
+        - Description: "{description}"
+        - Amount: ${amount:.2f}
+        - Amount Type: {"Credit (money in)" if amount > 0 else "Debit (money out)"}
 
-        Respond with just the category name and optional subcategory in format: "Category: Subcategory" or "Category"
+        Available Categories:
+        - Entertainment: streaming services, gaming, movies, music, sports, hobbies
+        - Groceries: food shopping, household essentials, supermarkets
+        - Transportation: gas, rideshare, parking, public transit, vehicle expenses
+        - Income: salary, wages, deposits, refunds, freelance payments
+        - Housing: rent, mortgage, property taxes, home maintenance
+        - Subscriptions: recurring monthly/annual services, memberships
+        - Dining: restaurants, coffee shops, food delivery, fast food
+        - Utilities: electricity, water, gas, internet, phone, cable
+        - Healthcare: medical expenses, pharmacy, doctor visits, insurance
+        - Shopping: retail purchases, online shopping, clothing, electronics
+        - Insurance: car, home, health, life insurance payments
+        - Education: courses, books, school supplies, tuition
+        - Travel: flights, hotels, vacation expenses
+        - Personal Care: gym, beauty, wellness services
+        - Charitable: donations, charity contributions
+        - Other: uncategorized or miscellaneous expenses
+
+        Instructions:
+        1. Consider the transaction description, amount, and context
+        2. Choose the most appropriate category
+        3. If applicable, suggest a relevant subcategory
+        4. For income transactions, use "Income" category
+        5. Be specific but not overly granular
+
+        Respond with ONLY the category name and optional subcategory in this exact format: "CategoryName: SubcategoryName" or just "CategoryName" if no subcategory applies.
+        
+        Examples:
+        - "Shopping: Electronics"
+        - "Entertainment: Streaming"
+        - "Other"
+        - "Income"
         """
         
         try:
@@ -160,11 +182,14 @@ class TransactionCategorizer:
             result = response.choices[0].message.content.strip()
             
             # Parse response
+            result = result.strip()
             if ':' in result:
-                category, subcategory = result.split(':', 1)
-                return category.strip(), subcategory.strip()
+                parts = result.split(':', 1)
+                category = parts[0].strip()
+                subcategory = parts[1].strip() if parts[1].strip() else None
+                return category, subcategory
             else:
-                return result.strip(), None
+                return result, None
                 
         except Exception as e:
             print(f"OpenAI API error: {e}")

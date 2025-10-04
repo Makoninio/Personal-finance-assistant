@@ -10,12 +10,14 @@ A hackathon-ready MVP for personal finance management with AI-powered categoriza
 - **🔍 Transaction Explanations**: AI-powered explanations using OpenAI and Perplexity
 - **🌍 Multilingual Reports**: DeepL integration for Spanish, French, German, and more
 - **📈 Interactive Dashboard**: Streamlit-based UI with charts and visualizations
+- **☁️ Senso Integration**: Store raw PDF text and structured transactions in Senso cloud
 
 ## 🛠️ Tech Stack
 
 - **Backend**: Python, FastAPI, Pandas, SQLite
 - **Frontend**: Streamlit
 - **AI Services**: OpenAI, Perplexity, DeepL
+- **Cloud Storage**: Senso API for raw text and structured data
 - **Database**: SQLite (local storage)
 - **Charts**: Plotly
 
@@ -81,6 +83,7 @@ finance-assistant/
 
 ### API Keys (Optional)
 
+- **Senso**: Required for storing raw PDF text and structured transactions in cloud
 - **OpenAI**: Required for AI categorization and explanations
 - **Perplexity**: Optional, for enhanced transaction explanations
 - **DeepL**: Optional, for multilingual translations
@@ -88,6 +91,19 @@ finance-assistant/
 ### Database
 
 The app uses SQLite for local storage. Database file is created automatically at `data/transactions.db`.
+
+### Senso Integration
+
+The app can optionally store both raw PDF text and structured transaction data in Senso cloud storage:
+
+1. **Raw Text Storage**: Full PDF text is uploaded to `/content/raw` endpoint
+2. **Structured Data**: Parsed transactions are uploaded to `/content/json` endpoint
+3. **Content IDs**: Both uploads return content IDs for future reference
+
+To enable Senso integration:
+1. Get your Senso API key from [Senso Dashboard](https://senso.ai)
+2. Add it to your `.env` file or enter it in the Settings page
+3. Upload PDFs will automatically be stored in Senso
 
 ## 📊 Usage Examples
 

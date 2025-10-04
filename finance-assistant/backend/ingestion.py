@@ -4,13 +4,15 @@ PDF and CSV ingestion module for bank statements
 import pandas as pd
 import PyPDF2
 import re
+import os
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 import io
+from senso_integration import SensoIntegration
 
 class StatementIngestion:
-    def __init__(self):
+    def __init__(self, senso_api_key: str = None):
         # More flexible patterns for generic bank statements
         self.transaction_patterns = {
             # Date patterns - handle various formats
@@ -30,10 +32,14 @@ class StatementIngestion:
             'zelle': r'ZELLE',
             'transfer': r'TRANSFER'
         }
+        
+        # Initialize Senso integration
+        self.senso = SensoIntegration(senso_api_key)
     
-    def parse_pdf(self, pdf_path: str) -> pd.DataFrame:
+    def parse_pdf(self, pdf_path: str, upload_to_senso: bool = True) -> pd.DataFrame:
         """Parse bank statement PDF and extract transactions"""
         transactions = []
+        raw_text = ""
         
         try:
             with open(pdf_path, 'rb') as file:
@@ -45,6 +51,9 @@ class StatementIngestion:
                     if not text:
                         print(f"No text extracted from page {page_num + 1}")
                         continue
+                    
+                    # Accumulate raw text for Senso upload
+                    raw_text += text + "\n"
                     
                     print(f"Page {page_num + 1} text length: {len(text)} characters")
                     lines = text.split("\n")
@@ -65,7 +74,51 @@ class StatementIngestion:
             return pd.DataFrame()
 
         print(f"Total transactions found: {len(transactions)}")
-        return self._create_dataframe(transactions)
+        
+        # Create DataFrame
+        df = self._create_dataframe(transactions)
+        
+        # Upload to Senso if requested
+        if upload_to_senso and raw_text.strip():
+            self._upload_to_senso(pdf_path, raw_text, df)
+        
+        return df
+    
+    def _upload_to_senso(self, pdf_path: str, raw_text: str, df: pd.DataFrame) -> Dict[str, Optional[str]]:
+        """
+        Upload raw PDF text and structured transactions to Senso
+        
+        Args:
+            pdf_path: Path to the original PDF file
+            raw_text: Extracted text from PDF
+            df: DataFrame containing structured transactions
+            
+        Returns:
+            Dictionary with content_ids for both uploads
+        """
+        # Generate title from PDF filename
+        pdf_filename = os.path.basename(pdf_path)
+        pdf_title = f"Bank Statement - {pdf_filename}"
+        
+        # Convert DataFrame to list of dictionaries
+        transactions = df.to_dict('records') if not df.empty else []
+        
+        print(f"📤 Uploading to Senso: {len(transactions)} transactions from {pdf_filename}")
+        
+        # Upload both raw text and structured data
+        result = self.senso.upload_both_formats(
+            pdf_title=pdf_title,
+            raw_text=raw_text,
+            transactions=transactions,
+            category_id="bank_statements"  # Optional category
+        )
+        
+        if result['raw_content_id']:
+            print(f"✅ Raw text uploaded with ID: {result['raw_content_id']}")
+        if result['structured_content_id']:
+            print(f"✅ Structured transactions uploaded with ID: {result['structured_content_id']}")
+        
+        return result
 
     
     def parse_csv(self, csv_path: str) -> pd.DataFrame:

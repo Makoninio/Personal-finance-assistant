@@ -206,6 +206,7 @@ def show_upload_page():
     
     if uploaded_file is not None:
         # Process file
+        senso_api_key = st.session_state.get('senso_api_key')
         ingestion = StatementIngestion()
         
         if uploaded_file.type == "application/pdf":
@@ -458,6 +459,16 @@ def show_settings_page():
         )
         if deepl_key:
             st.success("DeepL API key configured!")
+    
+    with st.expander("Senso API Key"):
+        senso_key = st.text_input(
+            "Senso API Key",
+            type="password",
+            help="Required for storing raw PDF text and structured transactions in Senso"
+        )
+        if senso_key:
+            st.session_state.senso_api_key = senso_key
+            st.success("Senso API key configured!")
     
     st.subheader("📊 Data Management")
     
