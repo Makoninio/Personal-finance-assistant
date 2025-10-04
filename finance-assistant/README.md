@@ -146,27 +146,6 @@ translated = translator.translate_financial_summary(
 )
 ```
 
-## 🧪 Testing
-
-Run the test suite:
-```bash
-python -m pytest tests/
-```
-
-Or run specific tests:
-```bash
-python tests/test_categorize.py
-```
-
-## 🎯 Hackathon Demo Script
-
-1. **Start the app**: `streamlit run frontend/app.py`
-2. **Load sample data**: Click "Load Sample Data"
-3. **Show dashboard**: Display financial overview and charts
-4. **Explain transaction**: Select a transaction and get AI explanation
-5. **Translate report**: Generate Spanish financial summary
-6. **Show insights**: Display health score and recommendations
-
 ## 🔮 Future Enhancements
 
 - **Budget Planning**: Set and track budget goals
@@ -175,20 +154,3 @@ python tests/test_categorize.py
 - **Receipt Scanning**: OCR for receipt processing
 - **Mobile App**: React Native mobile interface
 - **Advanced Analytics**: Machine learning insights
-
-## 📝 License
-
-MIT License - Built for hackathon demo purposes.
-
-## 🤝 Contributing
-
-This is a hackathon project. For production use, consider:
-- Adding proper error handling
-- Implementing user authentication
-- Adding data validation
-- Improving security measures
-- Adding comprehensive tests
-
----
-
-**Built in under 5 hours for hackathon demo! 🚀**
