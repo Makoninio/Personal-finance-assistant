@@ -14,7 +14,7 @@ A hackathon demo for personal finance management with AI-powered categorization,
 
 - **Backend**: Python, FastAPI, Pandas, SQLite
 - **Frontend**: Streamlit
-- **AI Services**: OpenAI, Perplexity, DeepL
+- **AI Services**: OpenAI, Perplexity
 - **Database**: SQLite (local storage)
 - **Charts**: Plotly
 
