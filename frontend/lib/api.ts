@@ -34,7 +34,14 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    throw new Error(`Request to ${path} failed with status ${res.status}`);
+    let detail: string | undefined;
+    try {
+      const body = await res.json();
+      detail = typeof body?.detail === "string" ? body.detail : undefined;
+    } catch {
+      // response wasn't JSON — fall back to the generic message below.
+    }
+    throw new Error(detail || `Request to ${path} failed with status ${res.status}`);
   }
 
   return (await res.json()) as T;
@@ -48,4 +55,35 @@ export async function getHealth(): Promise<HealthResponse> {
 /** GET /transactions — returns the list of transactions from the backend. */
 export async function getTransactions(): Promise<Transaction[]> {
   return apiFetch<Transaction[]>("/transactions");
+}
+
+export type ChatRole = "user" | "assistant";
+
+export type ChatHistoryMessage = {
+  role: string;
+  content: string;
+};
+
+export type ChatResponse = {
+  reply: string;
+};
+
+/**
+ * POST /agent/chat — sends a message (plus prior conversation turns) to the
+ * LangGraph-backed finance assistant and returns its reply. Throws if the
+ * backend returns a non-2xx response (e.g. 400 when OPENAI_API_KEY isn't
+ * configured) — the thrown Error's message is the backend's `detail` field
+ * when available.
+ */
+export async function sendChatMessage(
+  message: string,
+  history: ChatHistoryMessage[]
+): Promise<ChatResponse> {
+  return apiFetch<ChatResponse>("/agent/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message, history }),
+  });
 }
