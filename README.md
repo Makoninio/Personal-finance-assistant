@@ -28,15 +28,32 @@ npm install
 cp .env.local.example .env.local   # NEXT_PUBLIC_API_URL=http://localhost:8000
 npm run dev
 ```
-Visit `http://localhost:3000/transactions` — renders live data from the backend when it's running (color-coded amounts, tabular alignment), or a clearly-labeled mock fallback if the backend isn't reachable, so the UI never breaks standalone. The header health badge reflects backend status.
+Visit `http://localhost:3000` for the dashboard, or any of: `/transactions`, `/accounts`, `/subscriptions`, `/budgets`, `/assistant`, `/settings`.
+
+### Enabling the chat assistant and bank linking
+
+Two features need credentials you provide yourself — copy `backend/.env.example` to `backend/.env` and fill in:
+
+```
+OPENAI_API_KEY=...        # https://platform.openai.com/api-keys — powers the chat assistant
+PLAID_CLIENT_ID=...       # https://dashboard.plaid.com/signup — free Sandbox keys, instant
+PLAID_SECRET=...          # same dashboard, Team Settings -> Keys -> Sandbox secret
+PLAID_ENV=sandbox
+FERNET_KEY=...            # generate: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+Restart the backend after editing `.env`. Without these, the app still runs fully — `/assistant` and `/accounts` show a clear "not configured" message instead of crashing — check `/settings` for live status of both integrations.
+
+Bank linking uses **Plaid Sandbox** (fake test institutions, e.g. "Platypus Bank" with username `user_good` / password `pass_good`), not your real bank — this is the standard way fintech portfolio projects demonstrate bank connectivity without a production-access review process.
 
 ## Current state
 
-- [x] FastAPI backend with SQLite/SQLAlchemy, seeded from `finance-assistant/data/sample_transactions.csv`, `/health` + `/transactions` endpoints, one passing pytest test.
-- [x] Next.js frontend with a sidebar shell, a live transactions table, and a backend health indicator.
+- [x] FastAPI backend (SQLite/SQLAlchemy) with transactions, insights, subscriptions, budgets endpoints, ported from the legacy app's analytics logic.
+- [x] Next.js frontend: Dashboard, Accounts, Transactions, Subscriptions, Budgets, Assistant, Settings — all wired to real backend data, no placeholder pages.
+- [x] Plaid Sandbox bank linking (Link flow, cursor-based `/transactions/sync`, encrypted access-token storage). Manual sync trigger for now — webhook-driven sync needs a public HTTPS endpoint, noted as follow-up.
+- [x] LangGraph-based chat assistant (`/assistant`) with tool-calling access to real spending/subscription/budget data — grounded answers, not a generic chatbot.
 - [ ] Statement upload (PDF/CSV/image) on the new stack
-- [ ] Plaid Sandbox bank-linking integration
-- [ ] LangGraph-based agent (chat Q&A, subscription audit, digests, anomaly detection, budget rebalancing)
 - [ ] Postgres + Alembic migrations, deployment (Vercel + Railway/Render)
+- [ ] Scheduled/proactive agent workflows (digests, anomaly detection, budget rebalancing with approval) — chat is reactive only so far
 
 See the project plan for the full design and rationale behind these choices (why LangGraph over CrewAI, why Plaid over Teller, why SQL over a vector store, etc.).
