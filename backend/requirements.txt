@@ -6,3 +6,5 @@ pydantic-settings
 pytest
 httpx
 pandas
+plaid-python
+cryptography
