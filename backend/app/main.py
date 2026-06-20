@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import budgets, config_status, health, insights, subscriptions, transactions
+from app.routers import accounts, budgets, config_status, health, insights, plaid, subscriptions, transactions
 
 app = FastAPI(title="Personal Finance Assistant API")
 
@@ -20,3 +20,5 @@ app.include_router(insights.router)
 app.include_router(subscriptions.router)
 app.include_router(budgets.router)
 app.include_router(config_status.router)
+app.include_router(accounts.router)
+app.include_router(plaid.router)
