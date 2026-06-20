@@ -71,3 +71,17 @@ class AccountRead(BaseModel):
 class ConfigStatus(BaseModel):
     openai_configured: bool
     plaid_configured: bool
+
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: list[ChatMessage] = []
+
+
+class ChatResponse(BaseModel):
+    reply: str

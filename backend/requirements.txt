@@ -6,3 +6,7 @@ pydantic-settings
 pytest
 httpx
 pandas
+langgraph
+langchain-openai
+langchain-core
+openai
