@@ -49,3 +49,46 @@ export async function getHealth(): Promise<HealthResponse> {
 export async function getTransactions(): Promise<Transaction[]> {
   return apiFetch<Transaction[]>("/transactions");
 }
+
+export type Account = {
+  id: number;
+  institution_id: number;
+  institution_name?: string | null;
+  plaid_account_id: string;
+  name: string;
+  type?: string | null;
+  mask?: string | null;
+  current_balance?: number | null;
+  available_balance?: number | null;
+};
+
+/** POST /plaid/create_link_token — returns a Plaid Link token to start the hosted Link flow. */
+export async function createLinkToken(): Promise<{ link_token: string }> {
+  return apiFetch<{ link_token: string }>("/plaid/create_link_token", {
+    method: "POST",
+  });
+}
+
+/** POST /plaid/exchange_public_token — exchanges Link's public_token for accounts + an initial sync. */
+export async function exchangePublicToken(publicToken: string): Promise<Account[]> {
+  return apiFetch<Account[]>("/plaid/exchange_public_token", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ public_token: publicToken }),
+  });
+}
+
+/** GET /accounts — returns all linked accounts (with their institution name). */
+export async function getAccounts(): Promise<Account[]> {
+  return apiFetch<Account[]>("/accounts");
+}
+
+/** POST /plaid/sync/{institutionId} — manually re-trigger a transactions sync for one institution. */
+export async function syncInstitution(
+  institutionId: number
+): Promise<{ added: number; modified: number; removed: number }> {
+  return apiFetch<{ added: number; modified: number; removed: number }>(
+    `/plaid/sync/${institutionId}`,
+    { method: "POST" }
+  );
+}
