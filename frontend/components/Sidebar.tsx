@@ -10,12 +10,13 @@ type NavItem = {
 };
 
 const NAV_ITEMS: { label: string; href: string }[] = [
-  { label: "Dashboard", href: "#" },
+  { label: "Dashboard", href: "/" },
+  { label: "Accounts", href: "/accounts" },
   { label: "Transactions", href: "/transactions" },
-  { label: "Subscriptions", href: "#" },
-  { label: "Budgets", href: "#" },
-  { label: "Assistant", href: "#" },
-  { label: "Settings", href: "#" },
+  { label: "Subscriptions", href: "/subscriptions" },
+  { label: "Budgets", href: "/budgets" },
+  { label: "Assistant", href: "/assistant" },
+  { label: "Settings", href: "/settings" },
 ];
 
 export default function Sidebar() {
@@ -23,7 +24,7 @@ export default function Sidebar() {
 
   const items: NavItem[] = NAV_ITEMS.map((item) => ({
     ...item,
-    active: item.href !== "#" && pathname.startsWith(item.href),
+    active: item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
   }));
 
   return (
