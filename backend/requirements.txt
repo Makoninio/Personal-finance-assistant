@@ -8,3 +8,7 @@ httpx
 pandas
 plaid-python
 cryptography
+langgraph
+langchain-openai
+langchain-core
+openai
